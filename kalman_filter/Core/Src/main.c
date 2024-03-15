@@ -21,8 +21,11 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -91,8 +94,11 @@ int main(void)
 	MX_USART2_UART_Init();
 	/* USER CODE BEGIN 2 */
 
-	uint32_t counter = 0;
-	char buffer[32] = {};
+	float data[4] = {};
+	const float frequency = 0.7f;
+	const float omega = 2.0f * M_PI * frequency;
+	const float phi_1 = 2.0f * M_PI / 3.0f;
+	const float phi_2 = 4.0f * M_PI / 3.0f;
 
 	/* USER CODE END 2 */
 
@@ -102,15 +108,17 @@ int main(void)
 	{
 		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 
-		snprintf(buffer, sizeof(buffer) - 1, "PING %lu\n", counter);
-		++counter;
+		data[0] = (float)HAL_GetTick() * 0.001f;
+		data[1] = sin(omega * data[0]);
+		data[2] = sin(omega * data[0] + phi_1);
+		data[3] = sin(omega * data[0] + phi_2);
 
-		if (HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), UINT32_MAX) != HAL_OK)
+		if (HAL_UART_Transmit(&huart2, (uint8_t*)data, (uint16_t)sizeof(data), UINT32_MAX) != HAL_OK)
 		{
 			Error_Handler();
 		}
 
-		HAL_Delay(500);
+		HAL_Delay(10);
 
 		/* USER CODE END WHILE */
 
