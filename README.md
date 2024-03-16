@@ -1,6 +1,6 @@
 # kalman_filter
 
-Kalman filter for a 9-axis IMU, implemented for a STM32 microcontroller
+Kalman filter for a 9-axis MPU-9250 IMU, implemented for a STM32 microcontroller
 
 ## References
 
